@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Illo Un Campero — TFG</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&family=Inter:wght@400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--o:#F39200;--od:#D97E00;--ol:#FFF3E0;--op:#FFFAF2;--k:#111;--g1:#333;--g2:#666;--bd:#E8E8E8;--w:#fff}
+html,body{width:100%;height:100%;overflow:hidden;background:#111;font-family:'Inter',sans-serif;font-size:18px}
+
+.deck{width:100%;height:100%;position:relative}
+.slide{position:absolute;inset:0;display:none;background:#fff;overflow:hidden}
+.slide.active{display:block}
+
+/* BLOB */
+.blob{position:absolute;top:-110px;left:-110px;width:420px;height:420px;background:var(--o);border-radius:63% 37% 70% 30%/48% 62% 38% 52%;opacity:.12;pointer-events:none;z-index:0}
+.blob-r{position:absolute;bottom:-130px;right:-110px;width:460px;height:460px;background:var(--o);border-radius:37% 63% 30% 70%/62% 48% 52% 38%;opacity:.11;pointer-events:none;z-index:0}
+
+/* BURGER DECO SVG */
+.bur{position:absolute;right:-40px;top:50%;transform:translateY(-50%);opacity:.055;z-index:0;width:460px;height:460px;pointer-events:none}
+
+/* SLIDE NUMBER */
+.sn{position:absolute;bottom:24px;left:30px;width:44px;height:44px;background:var(--o);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:#fff;z-index:20;box-shadow:0 4px 16px rgba(243,146,0,.4)}
+
+/* LOGO */
+.logo{display:flex;flex-direction:column;align-items:center;justify-content:center;border:4px solid var(--o);border-radius:50%;background:#fff;flex-shrink:0;box-shadow:0 8px 32px rgba(243,146,0,.18)}
+.logo .il{font-family:'Pacifico',cursive;color:var(--o);line-height:1}
+.logo .uc{font-family:'Poppins',sans-serif;font-weight:800;color:var(--k);text-transform:uppercase;line-height:1;letter-spacing:.06em}
+.logo-xl{width:170px;height:170px}.logo-xl .il{font-size:52px}.logo-xl .uc{font-size:20px;margin-top:5px}
+.logo-lg{width:120px;height:120px}.logo-lg .il{font-size:34px}.logo-lg .uc{font-size:9px;margin-top:4px}
+.logo-sm{width:80px;height:80px}.logo-sm .il{font-size:22px}.logo-sm .uc{font-size:7px;margin-top:3px}
+
+/* TITLE */
+.ttl{font-family:'Poppins',sans-serif;font-weight:900;color:var(--k);line-height:1.0;position:relative;z-index:1}
+.ttl::after{content:'';display:block;width:72px;height:7px;background:var(--o);border-radius:3px;margin-top:12px}
+.ttl-w{color:#fff}.ttl-w::after{background:#fff}
+
+/* CARD */
+.card{background:#fff;border:1.5px solid var(--bd);border-radius:18px;box-shadow:0 4px 24px rgba(0,0,0,.07);position:relative;z-index:1}
+
+/* CHECK ROW */
+.cr{display:flex;align-items:flex-start;gap:20px;position:relative;z-index:1}
+.ci{flex-shrink:0;margin-top:3px}
+
+/* TECH COL */
+.tcol{background:#fff;border:1.5px solid var(--bd);border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.06)}
+.tcol-h{padding:14px 20px;font-family:'Poppins',sans-serif;font-size:17px;font-weight:800;color:#fff;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:9px}
+.tcol-h.o{background:var(--o)}.tcol-h.k{background:var(--k)}.tcol-h.g{background:#555}
+.ti{display:flex;align-items:center;gap:10px;padding:12px 20px;border-bottom:1px solid var(--bd);font-size:19px;color:var(--g1)}
+.ti:last-child{border-bottom:none}
+.td{width:8px;height:8px;border-radius:50%;background:var(--o);flex-shrink:0}
+
+/* ENTITY */
+.ent{background:#fff;border:1.5px solid var(--bd);border-radius:14px;overflow:hidden;box-shadow:0 3px 16px rgba(0,0,0,.07)}
+.eh{padding:12px 18px;font-family:'Poppins',sans-serif;font-size:17px;font-weight:800;color:#fff;display:flex;align-items:center;gap:9px;text-transform:uppercase;letter-spacing:.06em}
+.eh.o{background:var(--o)}.eh.k{background:var(--k)}
+.ef{display:flex;align-items:center;gap:9px;padding:9px 18px;border-bottom:1px solid #f5f5f5;font-size:17px;color:var(--g2)}
+.ef:last-child{border-bottom:none}
+.efd{width:6px;height:6px;border-radius:50%;background:var(--o);flex-shrink:0}
+
+/* FLOW TAG */
+.ft{background:var(--ol);color:var(--od);font-size:19px;font-weight:700;padding:3px 9px;border-radius:10px;border:1px solid rgba(243,146,0,.3);white-space:nowrap;font-family:'Poppins',sans-serif}
+
+/* ARCH BOX */
+.ab{background:#fff;border:1.5px solid var(--bd);border-radius:14px;padding:14px 22px;text-align:center;box-shadow:0 3px 16px rgba(0,0,0,.07);position:relative;z-index:1}
+.ab.ao{background:var(--o);border-color:var(--o);box-shadow:0 6px 24px rgba(243,146,0,.3)}
+.ab.ak{background:var(--k);border-color:var(--k)}
+
+/* DEPLOY ROW */
+.dr{display:flex;align-items:center;gap:20px;background:#fff;border:1.5px solid var(--bd);border-radius:14px;padding:18px 24px;box-shadow:0 3px 14px rgba(0,0,0,.05);border-right:6px solid var(--o);position:relative;z-index:1}
+
+/* BADGE */
+.bdg{display:inline-flex;align-items:center;background:var(--op);color:var(--od);font-family:'Poppins',sans-serif;font-size:18px;font-weight:700;padding:8px 18px;border-radius:22px;border:1.5px solid rgba(243,146,0,.35)}
+
+/* NAV */
+.nav{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:12px;background:rgba(8,8,8,.85);backdrop-filter:blur(16px);padding:10px 22px;border-radius:44px;z-index:999;border:1px solid rgba(255,255,255,.1)}
+.nav button{background:none;border:none;cursor:pointer;color:#fff;font-size:18px;padding:5px 11px;border-radius:8px;transition:background .2s}
+.nav button:hover{background:rgba(243,146,0,.4)}
+.ndots{display:flex;gap:6px}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer;transition:all .2s}
+.dot.on{background:var(--o);transform:scale(1.55)}
+.ncnt{color:#fff;font-size:17px;font-family:'Poppins',sans-serif;min-width:52px;text-align:center;font-weight:700}
+
+@media print{body{background:#fff}.slide{position:relative;display:block!important;page-break-after:always;width:100vw;height:100vh}.nav{display:none}}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- ═══ S1 PORTADA ═══════════════════════════════════════════ -->
+<div class="slide active" id="s1">
+  <div class="blob"></div>
+  <div class="blob-r"></div>
+  <!-- Burger deco -->
+  <svg class="bur" viewBox="0 0 300 300" fill="none">
+    <circle cx="150" cy="150" r="125" stroke="#F39200" stroke-width="3"/>
+    <path d="M72 108 Q150 76 228 108" stroke="#F39200" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+    <rect x="68" y="112" width="164" height="28" rx="14" stroke="#F39200" stroke-width="3.5" fill="none"/>
+    <rect x="60" y="148" width="180" height="22" rx="11" stroke="#F39200" stroke-width="3.5" fill="none"/>
+    <rect x="68" y="178" width="164" height="22" rx="11" stroke="#F39200" stroke-width="3.5" fill="none"/>
+    <path d="M72 207 Q150 236 228 207" stroke="#F39200" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+    <circle cx="100" cy="127" r="5.5" fill="#F39200" opacity=".55"/>
+    <circle cx="150" cy="124" r="5.5" fill="#F39200" opacity=".55"/>
+    <circle cx="200" cy="127" r="5.5" fill="#F39200" opacity=".55"/>
+  </svg>
+
+  <div style="display:flex;align-items:center;height:100%;padding:0 8% 0 9%;gap:64px;position:relative;z-index:1">
+    <div style="width:170px;height:170px;border-radius:50%;overflow:hidden;border:5px solid #F39200;box-shadow:0 8px 40px rgba(243,146,0,.28);flex-shrink:0;background:#fff"><img src="https://res.cloudinary.com/dp9u7piam/image/upload/v1779177111/LogoFondoBlanco_lufdqm.png" alt="Illo Un Campero" style="width:100%;height:100%;object-fit:cover"/></div>
+    <div>
+      <div style="font-family:'Poppins',sans-serif;font-size:clamp(56px,8vw,100px);font-weight:900;color:var(--k);line-height:.95;margin-bottom:18px">
+        Illo Un<br>Campero
+      </div>
+      <div style="font-family:'Poppins',sans-serif;font-size:clamp(24px,2.8vw,34px);font-weight:400;color:var(--g2);line-height:1.4;margin-bottom:18px">
+        Plataforma de Pedidos Online<br>Multiplataforma
+      </div>
+      <div style="font-family:'Poppins',sans-serif;font-size:clamp(20px,2.2vw,28px);font-weight:700;color:var(--o);letter-spacing:.04em;margin-bottom:44px">
+        Trabajo Fin de Grado
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;gap:14px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F39200" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          <span style="font-size:clamp(20px,2vw,26px);color:var(--g1)">Miguel · Jose Antonio · Bryan</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F39200" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+          <span style="font-size:clamp(20px,2vw,26px);color:var(--g1)">CPIFP Alan Turing</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F39200" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span style="font-size:clamp(20px,2vw,26px);color:var(--g1)">2025 / 2026</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sn">1</div>
+</div>
+
+<!-- ═══ S2 ÍNDICE ══════════════════════════════════════════════ -->
+<div class="slide" id="s2">
+  <div class="blob"></div>
+  <svg class="bur" viewBox="0 0 300 300" fill="none"><circle cx="150" cy="150" r="125" stroke="#F39200" stroke-width="3"/><path d="M72 108 Q150 76 228 108" stroke="#F39200" stroke-width="3.5" stroke-linecap="round" fill="none"/><rect x="68" y="112" width="164" height="28" rx="14" stroke="#F39200" stroke-width="3.5" fill="none"/><rect x="60" y="148" width="180" height="22" rx="11" stroke="#F39200" stroke-width="3.5" fill="none"/><rect x="68" y="178" width="164" height="22" rx="11" stroke="#F39200" stroke-width="3.5" fill="none"/><path d="M72 207 Q150 236 228 207" stroke="#F39200" stroke-width="3.5" stroke-linecap="round" fill="none"/></svg>
+
+  <div style="padding:5% 8%;height:100%;display:flex;flex-direction:column;position:relative;z-index:1">
+    <div style="display:flex;align-items:center;gap:28px;margin-bottom:5%">
+      <div class="ttl" style="font-size:clamp(32px,4vw,52px)">Índice</div>
+      <div class="logo logo-sm" style="margin-left:auto"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;flex:1;align-content:start">
+      <!-- col 1 -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:center;gap:18px">
+          <div style="width:46px;height:46px;min-width:46px;border-radius:50%;background:var(--o);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:#fff;box-shadow:0 4px 14px rgba(243,146,0,.35)">01</div>
+          <span style="font-size:clamp(22px,2.2vw,28px);color:var(--k);font-weight:600;font-family:'Poppins',sans-serif">Motivación y Objetivos</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:18px">
+          <div style="width:46px;height:46px;min-width:46px;border-radius:50%;background:var(--o);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:#fff;box-shadow:0 4px 14px rgba(243,146,0,.35)">02</div>
+          <span style="font-size:clamp(22px,2.2vw,28px);color:var(--k);font-weight:600;font-family:'Poppins',sans-serif">Tecnologías</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:18px">
+          <div style="width:46px;height:46px;min-width:46px;border-radius:50%;background:var(--o);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:#fff;box-shadow:0 4px 14px rgba(243,146,0,.35)">03</div>
+          <span style="font-size:clamp(22px,2.2vw,28px);color:var(--k);font-weight:600;font-family:'Poppins',sans-serif">Arquitectura del Sistema</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:18px">
+          <div style="width:46px;height:46px;min-width:46px;border-radius:50%;background:var(--o);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:#fff;box-shadow:0 4px 14px rgba(243,146,0,.35)">04</div>
+          <span style="font-size:clamp(22px,2.2vw,28px);color:var(--k);font-weight:600;font-family:'Poppins',sans-serif">Funcionalidades Principales</span>
+        </div>
+      </div>
+      <!-- col 2 -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:center;gap:18px">
+          <div style="width:46px;height:46px;min-width:46px;border-radius:50%;background:var(--ol);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:var(--o)">05</div>
+          <span style="font-size:clamp(22px,2.2vw,28px);color:var(--g2);font-family:'Poppins',sans-serif">Seguridad</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:18px">
+          <div style="width:46px;height:46px;min-width:46px;border-radius:50%;background:var(--ol);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:var(--o)">06</div>
+          <span style="font-size:clamp(22px,2.2vw,28px);color:var(--g2);font-family:'Poppins',sans-serif">Testing y Calidad</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:18px">
+          <div style="width:46px;height:46px;min-width:46px;border-radius:50%;background:var(--ol);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:var(--o)">07</div>
+          <span style="font-size:clamp(22px,2.2vw,28px);color:var(--g2);font-family:'Poppins',sans-serif">Despliegue</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:18px">
+          <div style="width:46px;height:46px;min-width:46px;border-radius:50%;background:var(--ol);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:var(--o)">08</div>
+          <span style="font-size:clamp(22px,2.2vw,28px);color:var(--g2);font-family:'Poppins',sans-serif">Demo + Conclusiones</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sn">2</div>
+</div>
+
+<!-- ═══ S3 MOTIVACIÓN ══════════════════════════════════════════ -->
+<div class="slide" id="s3">
+  <div class="blob"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;height:100%">
+    <!-- Izquierda texto -->
+    <div style="padding:5% 5% 5% 8%;display:flex;flex-direction:column;justify-content:center;gap:24px;position:relative;z-index:1">
+      <div class="ttl" style="font-size:clamp(40px,4.5vw,58px)">Motivación<br>y Problema</div>
+
+      <div class="cr">
+        <svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:clamp(22px,2.2vw,28px);color:var(--g1);line-height:1.5">Restaurantes locales gestionan pedidos por <strong style="color:var(--k)">llamadas y WhatsApp</strong></span>
+      </div>
+      <div class="cr">
+        <svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:clamp(22px,2.2vw,28px);color:var(--g1);line-height:1.5">Plataformas externas aplican <strong style="color:var(--k)">comisiones del 30%</strong></span>
+      </div>
+      <div class="cr">
+        <svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:clamp(22px,2.2vw,28px);color:var(--g1);line-height:1.5">Sin carta digital, ni seguimiento, ni <strong style="color:var(--k)">app propia</strong></span>
+      </div>
+
+      <div class="card" style="padding:22px;border-left:6px solid var(--o);margin-top:8px">
+        <div style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:var(--o);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px">🎯 Objetivo del TFG</div>
+        <div style="font-size:clamp(20px,2vw,26px);color:var(--k);line-height:1.6">Digitalizar el proceso completo de pedido: desde la <strong>carta</strong> hasta el <strong>seguimiento en tiempo real</strong>.</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+          <span class="bdg">Web PWA</span>
+          <span class="bdg">API REST</span>
+          <span class="bdg">Android</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Derecha: foto real -->
+    <div style="position:relative;overflow:hidden">
+      <!-- Foto de hamburguesa / restaurante -->
+      <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=900&q=80"
+        alt="Hamburguesa" loading="lazy"
+        style="width:100%;height:100%;object-fit:cover;object-position:center">
+      <!-- Overlay etiqueta ANTES -->
+      <div style="position:absolute;top:28px;left:28px;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);color:#fff;font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;padding:10px 22px;border-radius:30px;letter-spacing:.08em">
+        📱 Antes: sólo por llamada
+      </div>
+      <!-- Overlay etiqueta DESPUÉS -->
+      <div style="position:absolute;bottom:28px;left:28px;background:var(--o);color:#fff;font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;padding:10px 22px;border-radius:30px;letter-spacing:.04em;box-shadow:0 6px 24px rgba(243,146,0,.5)">
+        ✅ Ahora: plataforma propia
+      </div>
+    </div>
+  </div>
+  <div class="sn">3</div>
+</div>
+
+<!-- ═══ S4 STACK ═══════════════════════════════════════════════ -->
+<div class="slide" id="s4">
+  <div class="blob"></div>
+  <div style="padding:5% 7%;height:100%;display:flex;flex-direction:column;position:relative;z-index:1">
+    <div class="ttl" style="font-size:clamp(40px,4.5vw,58px);margin-bottom:4%">Stack Tecnológico</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;flex:1">
+      <div class="tcol">
+        <div class="tcol-h o"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polygon points="12,2 22,8.5 22,15.5 12,22 2,15.5 2,8.5"/></svg>Frontend Web</div>
+        <div class="ti"><div class="td"></div>Angular 20</div>
+        <div class="ti"><div class="td"></div>TypeScript 5.9</div>
+        <div class="ti"><div class="td"></div>Firebase Auth</div>
+        <div class="ti"><div class="td"></div>Stripe.js</div>
+        <div class="ti"><div class="td"></div>Signals + Standalone</div>
+        <div class="ti"><div class="td"></div>Playwright E2E</div>
+      </div>
+      <div class="tcol">
+        <div class="tcol-h k"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Backend</div>
+        <div class="ti"><div class="td"></div>Spring Boot 3.4</div>
+        <div class="ti"><div class="td"></div>Java 21</div>
+        <div class="ti"><div class="td"></div>Firebase Admin SDK</div>
+        <div class="ti"><div class="td"></div>Spring Security</div>
+        <div class="ti"><div class="td"></div>Stripe Java</div>
+        <div class="ti"><div class="td"></div>Bucket4j Rate Limit</div>
+      </div>
+      <div class="tcol">
+        <div class="tcol-h g"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>Móvil Android</div>
+        <div class="ti"><div class="td"></div>Kotlin</div>
+        <div class="ti"><div class="td"></div>Jetpack Compose</div>
+        <div class="ti"><div class="td"></div>Material 3</div>
+        <div class="ti"><div class="td"></div>Retrofit</div>
+        <div class="ti"><div class="td"></div>Firebase Auth + FCM</div>
+        <div class="ti"><div class="td"></div>Stripe Android SDK</div>
+      </div>
+    </div>
+    <!-- Cloud strip -->
+    <div class="card" style="padding:16px 24px;display:flex;align-items:center;gap:24px;margin-top:18px;flex-shrink:0">
+      <span style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:var(--o);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap">Servicios Cloud</span>
+      <div style="width:1px;height:32px;background:var(--bd)"></div>
+      <div style="display:flex;align-items:center;gap:8px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 3l3 10 4-7 4 7 3-10-7 16L5 3z" fill="#F39200"/></svg><span style="font-size:20px;font-weight:700;color:var(--k);font-family:'Poppins',sans-serif">Firebase</span></div>
+      <div style="width:1px;height:24px;background:var(--bd)"></div>
+      <div style="display:flex;align-items:center;gap:8px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F39200" stroke-width="2" stroke-linecap="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg><span style="font-size:20px;font-weight:700;color:var(--k);font-family:'Poppins',sans-serif">Cloudinary</span></div>
+      <div style="width:1px;height:24px;background:var(--bd)"></div>
+      <div style="display:flex;align-items:center;gap:8px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F39200" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8,21 12,17 16,21"/></svg><span style="font-size:20px;font-weight:700;color:var(--k);font-family:'Poppins',sans-serif">Render</span></div>
+      <div style="width:1px;height:24px;background:var(--bd)"></div>
+      <div style="display:flex;align-items:center;gap:8px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F39200" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg><span style="font-size:20px;font-weight:700;color:var(--k);font-family:'Poppins',sans-serif">Stripe</span></div>
+    </div>
+  </div>
+  <div class="sn">4</div>
+</div>
+
+<!-- ═══ S5 ARQUITECTURA ════════════════════════════════════════ -->
+<div class="slide" id="s5">
+  <div class="blob"></div>
+  <div style="padding:5% 8%;height:100%;display:flex;flex-direction:column;position:relative;z-index:1">
+    <div class="ttl" style="font-size:clamp(40px,4.5vw,58px);margin-bottom:3%">Arquitectura del Sistema</div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0">
+      <div style="display:flex;gap:28px;margin-bottom:16px">
+        <div class="ab ao" style="min-width:200px;padding:16px 28px">
+          <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:5px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polygon points="12,2 22,8.5 22,15.5 12,22 2,15.5 2,8.5"/></svg><span style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:#fff">Angular PWA</span></div>
+          <div style="font-size:17px;color:rgba(255,255,255,.8);font-family:'Inter',sans-serif">Firebase Hosting</div>
+        </div>
+        <div class="ab ao" style="min-width:200px;padding:16px 28px">
+          <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:5px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/></svg><span style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:#fff">Android App</span></div>
+          <div style="font-size:17px;color:rgba(255,255,255,.8);font-family:'Inter',sans-serif">Compose + Retrofit</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:16px">
+        <div style="font-family:'Poppins',sans-serif;font-size:17px;font-weight:700;color:var(--o);background:var(--ol);padding:5px 14px;border-radius:12px;border:1px solid rgba(243,146,0,.35)">JWT Token</div>
+        <div style="width:2px;height:24px;background:var(--o)"></div>
+        <div style="width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:11px solid var(--o)"></div>
+      </div>
+      <div style="display:flex;gap:20px;align-items:center;margin-bottom:16px">
+        <div class="ab ak" style="min-width:240px;padding:16px 32px">
+          <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:5px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/></svg><span style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:#fff">Spring Boot REST API</span></div>
+          <div style="font-size:17px;color:rgba(255,255,255,.7);font-family:'Inter',sans-serif">Render — Docker</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:34px;height:2px;background:var(--o)"></div>
+          <div class="ab" style="min-width:180px;padding:12px 18px;border-color:var(--o)">
+            <div style="font-family:'Poppins',sans-serif;font-size:17px;font-weight:800;color:var(--o)">Firebase Admin SDK</div>
+            <div style="font-size:19px;color:var(--g2);margin-top:3px">verificación tokens JWT</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:16px">
+        <div style="width:2px;height:28px;background:var(--bd)"></div>
+        <div style="width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:11px solid var(--bd)"></div>
+      </div>
+      <div style="display:flex;gap:20px">
+        <div class="ab" style="min-width:160px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" style="display:block;margin:0 auto 6px"><path d="M5 3l3 10 4-7 4 7 3-10-7 16L5 3z" fill="#F39200"/></svg><div style="font-family:'Poppins',sans-serif;font-size:19px;font-weight:700;color:var(--k)">Firebase</div><div style="font-size:20px;color:var(--g2);margin-top:2px">Auth + Firestore</div></div>
+        <div class="ab" style="min-width:160px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F39200" stroke-width="2" stroke-linecap="round" style="display:block;margin:0 auto 6px"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg><div style="font-family:'Poppins',sans-serif;font-size:19px;font-weight:700;color:var(--k)">Stripe</div><div style="font-size:20px;color:var(--g2);margin-top:2px">Pagos + Webhooks</div></div>
+        <div class="ab" style="min-width:160px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F39200" stroke-width="2" stroke-linecap="round" style="display:block;margin:0 auto 6px"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg><div style="font-family:'Poppins',sans-serif;font-size:19px;font-weight:700;color:var(--k)">Cloudinary</div><div style="font-size:20px;color:var(--g2);margin-top:2px">CDN Imágenes</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="sn">5</div>
+</div>
+
+<!-- ═══ S6 MODELO DE DATOS ════════════════════════════════════ -->
+<div class="slide" id="s6">
+  <div class="blob"></div>
+  <div style="padding:5% 7%;height:100%;display:flex;flex-direction:column;position:relative;z-index:1">
+    <div class="ttl" style="font-size:clamp(40px,4.5vw,58px);margin-bottom:3%">Modelo de Datos</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;flex:1">
+      <div class="ent">
+        <div class="eh o"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>Producto</div>
+        <div class="ef"><div class="efd"></div>nombre</div>
+        <div class="ef"><div class="efd"></div>descripción</div>
+        <div class="ef"><div class="efd"></div>precio</div>
+        <div class="ef"><div class="efd"></div>categoría / subcategoría</div>
+        <div class="ef"><div class="efd"></div>imagenUrl</div>
+        <div class="ef"><div class="efd"></div>disponible · esOferta</div>
+      </div>
+      <div class="ent">
+        <div class="eh k"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>Pedido</div>
+        <div class="ef"><div class="efd"></div>cliente · productos · total</div>
+        <div class="ef"><div class="efd"></div>método de pago · cupón</div>
+        <div class="ef" style="flex-direction:column;align-items:flex-start;gap:8px;padding:12px 18px">
+          <span style="font-size:20px;color:var(--g2)">Estado:</span>
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+            <span class="ft">PENDIENTE</span><span style="color:var(--o);font-weight:700">→</span>
+            <span class="ft">COCINANDO</span><span style="color:var(--o);font-weight:700">→</span>
+            <span class="ft">REPARTO</span><span style="color:var(--o);font-weight:700">→</span>
+            <span class="ft">ENTREGADO</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="ent">
+          <div class="eh o"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Usuario</div>
+          <div class="ef"><div class="efd"></div>uid · nombre · email</div>
+          <div class="ef"><div class="efd"></div>teléfono · dirección</div>
+          <div class="ef"><div class="efd"></div>rol: CLIENTE / ADMIN / COCINA</div>
+        </div>
+        <div class="ent">
+          <div class="eh k"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/></svg>Cupón</div>
+          <div class="ef"><div class="efd"></div>código · descuento · activo</div>
+        </div>
+        <div class="ent">
+          <div class="eh o"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>Reseña</div>
+          <div class="ef"><div class="efd"></div>puntuación (1–5) · comentario</div>
+          <div class="ef"><div class="efd"></div>vinculada a pedido entregado</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sn">6</div>
+</div>
+
+<!-- ═══ S7 FUNCIONALIDADES ════════════════════════════════════ -->
+<div class="slide" id="s7">
+  <div class="blob"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;height:100%">
+    <div style="padding:5% 5% 5% 8%;display:flex;flex-direction:column;justify-content:center;gap:0;position:relative;z-index:1">
+      <div class="ttl" style="font-size:clamp(38px,4.2vw,56px);margin-bottom:5%">Funcionalidades<br>del Cliente</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="card" style="padding:26px;display:flex;flex-direction:column;gap:14px">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#F39200" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <div style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;color:var(--k)">Carta + Carrito</div>
+          <div style="font-size:18px;color:var(--g2)">Filtros, búsqueda, carrito persistente con notas</div>
+        </div>
+        <div class="card" style="padding:26px;display:flex;flex-direction:column;gap:14px">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#F39200" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          <div style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;color:var(--k)">Checkout</div>
+          <div style="font-size:18px;color:var(--g2)">Stripe, efectivo y cupones de descuento</div>
+        </div>
+        <div class="card" style="padding:26px;display:flex;flex-direction:column;gap:14px">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#F39200" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+          <div style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;color:var(--k)">Seguimiento Real</div>
+          <div style="font-size:18px;color:var(--g2)">Timeline en vivo del estado del pedido</div>
+        </div>
+        <div class="card" style="padding:26px;display:flex;flex-direction:column;gap:14px">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#F39200" stroke-width="1.8" stroke-linecap="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+          <div style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;color:var(--k)">Valoraciones</div>
+          <div style="font-size:18px;color:var(--g2)">1–5 estrellas solo en pedidos entregados</div>
+        </div>
+      </div>
+    </div>
+    <!-- Foto de app / móvil -->
+    <div style="position:relative;overflow:hidden">
+      <img src="https://images.unsplash.com/photo-1512054502232-10a0a035d672?w=900&q=80"
+        alt="App móvil" loading="lazy"
+        style="width:100%;height:100%;object-fit:cover;object-position:center">
+      <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(255,255,255,.08),rgba(0,0,0,.18))"></div>
+      <div style="position:absolute;bottom:28px;right:28px;background:var(--o);color:#fff;font-family:'Poppins',sans-serif;font-size:19px;font-weight:700;padding:10px 22px;border-radius:28px;box-shadow:0 6px 24px rgba(243,146,0,.5)">
+        🌍 Bilingüe ES / EN
+      </div>
+    </div>
+  </div>
+  <div class="sn">7</div>
+</div>
+
+<!-- ═══ S8 ADMIN & COCINA ══════════════════════════════════════ -->
+<div class="slide" id="s8">
+  <div class="blob"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;height:100%">
+    <div style="padding:5% 5% 5% 8%;display:flex;flex-direction:column;justify-content:center;gap:18px;position:relative;z-index:1">
+      <div class="ttl" style="font-size:clamp(36px,4vw,54px)">Panel Admin<br>y Cocina</div>
+      <div class="cr">
+        <svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:clamp(20px,2vw,26px);color:var(--g1);line-height:1.5"><strong style="color:var(--k)">CRUD de productos</strong> — subida firmada a Cloudinary</span>
+      </div>
+      <div class="cr">
+        <svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:clamp(20px,2vw,26px);color:var(--g1);line-height:1.5"><strong style="color:var(--k)">Dashboard cocina</strong> — pedidos en tiempo real</span>
+      </div>
+      <div class="cr">
+        <svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:clamp(20px,2vw,26px);color:var(--g1);line-height:1.5"><strong style="color:var(--k)">Estadísticas</strong> — ventas del día, top productos</span>
+      </div>
+      <div class="cr">
+        <svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:clamp(20px,2vw,26px);color:var(--g1);line-height:1.5"><strong style="color:var(--k)">Cupones</strong> — crear, activar y desactivar</span>
+      </div>
+      <div class="cr">
+        <svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:clamp(20px,2vw,26px);color:var(--g1);line-height:1.5"><strong style="color:var(--k)">Toggle apertura</strong> — abrir/cerrar tienda al instante</span>
+      </div>
+    </div>
+    <!-- Foto cocina / dashboard -->
+    <div style="position:relative;overflow:hidden">
+      <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=900&q=80"
+        alt="Cocina restaurante" loading="lazy"
+        style="width:100%;height:100%;object-fit:cover;object-position:center">
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,.22)"></div>
+      <div style="position:absolute;top:28px;right:28px;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);color:#fff;font-family:'Poppins',sans-serif;font-size:19px;font-weight:700;padding:10px 22px;border-radius:28px">
+        👨‍🍳 Gestión en tiempo real
+      </div>
+    </div>
+  </div>
+  <div class="sn">8</div>
+</div>
+
+<!-- ═══ S9 APP MÓVIL ══════════════════════════════════════════ -->
+<div class="slide" id="s9">
+  <div class="blob"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;height:100%">
+    <div style="padding:5% 5% 5% 8%;display:flex;flex-direction:column;justify-content:center;gap:18px;position:relative;z-index:1">
+      <div class="ttl" style="font-size:clamp(38px,4.2vw,56px)">App Móvil Android</div>
+      <div class="cr"><svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:clamp(20px,2vw,26px);color:var(--g1)"><strong style="color:var(--k)">Jetpack Compose + Material 3</strong></span></div>
+      <div class="cr"><svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:clamp(20px,2vw,26px);color:var(--g1)">Misma <strong style="color:var(--k)">API REST</strong> que la web (Retrofit)</span></div>
+      <div class="cr"><svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:clamp(20px,2vw,26px);color:var(--g1)">Notificaciones push <strong style="color:var(--k)">FCM</strong></span></div>
+      <div class="cr"><svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:clamp(20px,2vw,26px);color:var(--g1)">Pago con <strong style="color:var(--k)">Stripe</strong> integrado</span></div>
+      <div class="cr"><svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:clamp(20px,2vw,26px);color:var(--g1)">MVVM — <strong style="color:var(--k)">7 ViewModels · 3 Repositories</strong></span></div>
+      <div class="card" style="padding:18px;border-left:6px solid var(--o)">
+        <div style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:var(--o);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">9 Pantallas</div>
+        <div style="font-size:18px;color:var(--g1);line-height:1.7">Login · Registro · Carta · Carrito · Pedidos<br>Seguimiento · Admin · Cocina · Configuración</div>
+      </div>
+    </div>
+    <div style="position:relative;overflow:hidden">
+      <img src="https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?w=900&q=80"
+        alt="App móvil" loading="lazy"
+        style="width:100%;height:100%;object-fit:cover;object-position:center">
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,.2)"></div>
+      <div style="position:absolute;bottom:28px;right:28px;background:var(--o);color:#fff;font-family:'Poppins',sans-serif;font-size:19px;font-weight:700;padding:10px 22px;border-radius:28px;box-shadow:0 6px 24px rgba(243,146,0,.5)">
+        📱 Kotlin + Compose
+      </div>
+    </div>
+  </div>
+  <div class="sn">9</div>
+</div>
+
+<!-- ═══ S10 SEGURIDAD ════════════════════════════════════════ -->
+<div class="slide" id="s10">
+  <div class="blob"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;height:100%">
+    <!-- IZQUIERDA: contenido -->
+    <div style="padding:5% 5% 5% 8%;display:flex;flex-direction:column;justify-content:center;gap:18px;position:relative;z-index:1">
+      <div class="ttl" style="font-size:clamp(40px,4.5vw,58px)">Seguridad</div>
+      <div class="cr">
+        <svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:clamp(18px,2vw,24px);color:var(--g1);line-height:1.5"><strong style="color:var(--k)">Login seguro</strong> — Firebase Auth con tokens JWT verificados</span>
+      </div>
+      <div class="cr">
+        <svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:clamp(18px,2vw,24px);color:var(--g1);line-height:1.5"><strong style="color:var(--k)">3 roles separados</strong> — Cliente · Admin · Cocina</span>
+      </div>
+      <div class="cr">
+        <svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:clamp(18px,2vw,24px);color:var(--g1);line-height:1.5"><strong style="color:var(--k)">Protección anti-abuso</strong> — límite de peticiones en pagos y cupones</span>
+      </div>
+      <div class="cr">
+        <svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:clamp(18px,2vw,24px);color:var(--g1);line-height:1.5"><strong style="color:var(--k)">Pagos protegidos</strong> — Stripe con firma verificada en cada cobro</span>
+      </div>
+      <div class="cr">
+        <svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:clamp(18px,2vw,24px);color:var(--g1);line-height:1.5"><strong style="color:var(--k)">Validación total</strong> — todos los datos verificados antes de procesarse</span>
+      </div>
+      <div class="cr">
+        <svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:clamp(18px,2vw,24px);color:var(--g1);line-height:1.5"><strong style="color:var(--k)">Protección contra ataques web</strong> — cabeceras de seguridad y CORS</span>
+      </div>
+    </div>
+    <!-- DERECHA: foto -->
+    <div style="position:relative;overflow:hidden">
+      <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=900&q=80"
+        alt="Seguridad" loading="lazy"
+        style="width:100%;height:100%;object-fit:cover;object-position:center">
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,.22)"></div>
+      <div style="position:absolute;top:28px;right:28px;background:var(--o);color:#fff;font-family:'Poppins',sans-serif;font-size:18px;font-weight:700;padding:12px 24px;border-radius:28px;box-shadow:0 6px 24px rgba(243,146,0,.5)">
+        🛡️ 6 capas de protección
+      </div>
+    </div>
+  </div>
+  <div class="sn">10</div>
+</div>
+
+<!-- ═══ S11 TESTING ══════════════════════════════════════════ -->
+<div class="slide" id="s11">
+  <div class="blob"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;height:100%">
+    <!-- IZQUIERDA: contenido -->
+    <div style="padding:5% 5% 5% 8%;display:flex;flex-direction:column;justify-content:center;gap:16px;position:relative;z-index:1">
+      <div class="ttl" style="font-size:clamp(38px,4.2vw,54px)">Testing y Calidad</div>
+      <div class="cr">
+        <svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:clamp(17px,1.9vw,23px);color:var(--g1);line-height:1.5"><strong style="color:var(--k)">Playwright E2E</strong> — 6 suites: navegación, responsive, carta, formularios, integridad y rendimiento</span>
+      </div>
+      <div class="cr">
+        <svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:clamp(17px,1.9vw,23px);color:var(--g1);line-height:1.5"><strong style="color:var(--k)">JUnit + Mockito</strong> — pruebas unitarias del backend</span>
+      </div>
+      <div class="cr">
+        <svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:clamp(17px,1.9vw,23px);color:var(--g1);line-height:1.5"><strong style="color:var(--k)">Espresso + Compose UI</strong> — pruebas en Android</span>
+      </div>
+      <div class="cr">
+        <svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:clamp(17px,1.9vw,23px);color:var(--g1);line-height:1.5"><strong style="color:var(--k)">Responsive</strong> — testado en pantalla 1440px y móvil Pixel 7</span>
+      </div>
+      <div class="cr">
+        <svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:clamp(17px,1.9vw,23px);color:var(--g1);line-height:1.5"><strong style="color:var(--k)">Carga en menos de 3.5 segundos</strong> — validado automáticamente</span>
+      </div>
+      <!-- Cobertura badge -->
+      <div style="display:flex;align-items:center;gap:20px;background:var(--ol);border-radius:16px;padding:18px 24px;border-left:6px solid var(--o);margin-top:4px">
+        <div style="font-family:'Poppins',sans-serif;font-size:52px;font-weight:900;color:var(--o);line-height:1">82<span style="font-size:26px">%</span></div>
+        <div>
+          <div style="font-family:'Poppins',sans-serif;font-size:18px;font-weight:800;color:var(--k)">Cobertura de código</div>
+          <div style="font-size:15px;color:var(--g2);margin-top:3px">Tests en frontend, backend y Android</div>
+        </div>
+      </div>
+    </div>
+    <!-- DERECHA: foto -->
+    <div style="position:relative;overflow:hidden">
+      <img src="https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=900&q=80"
+        alt="Testing" loading="lazy"
+        style="width:100%;height:100%;object-fit:cover;object-position:center">
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,.2)"></div>
+      <div style="position:absolute;bottom:28px;right:28px;background:var(--o);color:#fff;font-family:'Poppins',sans-serif;font-size:18px;font-weight:700;padding:12px 24px;border-radius:28px;box-shadow:0 6px 24px rgba(243,146,0,.5)">
+        ✅ Calidad automatizada
+      </div>
+    </div>
+  </div>
+  <div class="sn">11</div>
+</div>
+
+<!-- ═══ S12 SEO & PWA ════════════════════════════════════════ -->
+<div class="slide" id="s12">
+  <div class="blob"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;height:100%">
+    <div style="padding:5% 5% 5% 8%;display:flex;flex-direction:column;justify-content:center;gap:20px;position:relative;z-index:1">
+      <div class="ttl" style="font-size:clamp(40px,4.5vw,58px)">Visible y usable<br><span style="color:var(--o)">en cualquier sitio</span></div>
+
+      <!-- Cards visuales en lugar de bullets técnicos -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px">
+        <div style="background:var(--ol);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:26px">📲</div>
+          <div style="font-family:'Poppins',sans-serif;font-size:17px;font-weight:800;color:var(--k)">Instálala como app</div>
+          <div style="font-size:15px;color:var(--g2);line-height:1.5">Se añade a la pantalla de inicio del móvil igual que una app nativa</div>
+        </div>
+        <div style="background:var(--ol);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:26px">🔍</div>
+          <div style="font-family:'Poppins',sans-serif;font-size:17px;font-weight:800;color:var(--k)">Sale en Google</div>
+          <div style="font-size:15px;color:var(--g2);line-height:1.5">Cada página tiene su título y descripción para buscadores</div>
+        </div>
+        <div style="background:var(--ol);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:26px">📤</div>
+          <div style="font-family:'Poppins',sans-serif;font-size:17px;font-weight:800;color:var(--k)">Compártela bien</div>
+          <div style="font-size:15px;color:var(--g2);line-height:1.5">Al compartir el enlace se ve imagen, título y descripción en WhatsApp e Instagram</div>
+        </div>
+        <div style="background:var(--ol);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:26px">⚡</div>
+          <div style="font-family:'Poppins',sans-serif;font-size:17px;font-weight:800;color:var(--k)">Carga rápida</div>
+          <div style="font-size:15px;color:var(--g2);line-height:1.5">Funciona sin conexión y carga en menos de 3 segundos</div>
+        </div>
+      </div>
+
+      <!-- GDPR badge -->
+      <div style="display:flex;align-items:center;gap:12px;background:#F5F5F5;border-radius:12px;padding:14px 18px;margin-top:4px">
+        <div style="font-size:24px">🍪</div>
+        <div>
+          <div style="font-family:'Poppins',sans-serif;font-size:16px;font-weight:700;color:var(--k)">Cumple la ley europea</div>
+          <div style="font-size:14px;color:var(--g2)">Aviso de cookies, política de privacidad y aviso legal incluidos</div>
+        </div>
+      </div>
+    </div>
+    <!-- Foto móvil / web -->
+    <div style="position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#F9F9F9">
+      <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=900&q=80"
+        alt="PWA móvil" loading="lazy"
+        style="width:100%;height:100%;object-fit:cover;object-position:center;opacity:.7">
+      <!-- Popup "Añadir a pantalla de inicio" -->
+      <div style="position:absolute;bottom:40px;left:50%;transform:translateX(-50%);background:#fff;border-radius:20px;padding:22px 28px;box-shadow:0 12px 48px rgba(0,0,0,.22);min-width:280px;z-index:2">
+        <div style="font-family:'Poppins',sans-serif;font-size:19px;font-weight:800;color:var(--k);margin-bottom:5px">Añadir a pantalla de inicio</div>
+        <div style="font-size:17px;color:var(--g2);margin-bottom:18px">illo-uncampero.web.app</div>
+        <div style="display:flex;gap:12px;justify-content:flex-end">
+          <div style="padding:9px 20px;border-radius:10px;border:1.5px solid var(--bd);font-size:18px;font-family:'Poppins',sans-serif;font-weight:600;color:var(--g2)">Cancelar</div>
+          <div style="padding:9px 20px;border-radius:10px;background:var(--o);font-size:18px;font-family:'Poppins',sans-serif;font-weight:700;color:#fff;box-shadow:0 4px 14px rgba(243,146,0,.4)">Añadir</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sn">12</div>
+</div>
+
+<!-- ═══ S13 DESPLIEGUE ═══════════════════════════════════════ -->
+<div class="slide" id="s13">
+  <div class="blob"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;height:100%">
+    <div style="padding:5% 5% 5% 8%;display:flex;flex-direction:column;justify-content:center;gap:20px;position:relative;z-index:1">
+      <div class="ttl" style="font-size:clamp(40px,4.5vw,58px)">Despliegue</div>
+      <div class="dr"><svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M5 3l3 10 4-7 4 7 3-10-7 16L5 3z" fill="#F39200"/></svg><div><div style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:var(--k)">Frontend</div><div style="font-size:18px;color:var(--o);font-weight:600">Firebase Hosting</div><div style="font-size:20px;color:var(--g2);margin-top:2px">Build Angular → dist/ · Cache 1 año</div></div></div>
+      <div class="dr"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#F39200" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8,21 12,17 16,21"/></svg><div><div style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:var(--k)">Backend</div><div style="font-size:18px;color:var(--o);font-weight:600">Render (Docker)</div><div style="font-size:20px;color:var(--g2);margin-top:2px">Dockerfile multi-stage · Auto-deploy en push</div></div></div>
+      <div class="dr"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#F39200" stroke-width="1.8" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4.03 3-9 3S3 13.66 3 12"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/></svg><div><div style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:var(--k)">Base de datos</div><div style="font-size:18px;color:var(--o);font-weight:600">Firebase Firestore</div><div style="font-size:20px;color:var(--g2);margin-top:2px">NoSQL en tiempo real · Sin mantenimiento</div></div></div>
+      <div class="dr"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#F39200" stroke-width="1.8" stroke-linecap="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg><div><div style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:var(--k)">Imágenes</div><div style="font-size:18px;color:var(--o);font-weight:600">Cloudinary CDN</div><div style="font-size:20px;color:var(--g2);margin-top:2px">CDN global · Transformaciones auto</div></div></div>
+    </div>
+    <!-- Foto servidores / cloud -->
+    <div style="position:relative;overflow:hidden">
+      <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=900&q=80"
+        alt="Servidores cloud" loading="lazy"
+        style="width:100%;height:100%;object-fit:cover;object-position:center">
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,.3)"></div>
+      <div style="position:absolute;top:28px;right:28px;background:var(--o);color:#fff;font-family:'Poppins',sans-serif;font-size:19px;font-weight:700;padding:10px 22px;border-radius:28px;box-shadow:0 6px 24px rgba(243,146,0,.5)">
+        🌍 Infraestructura cloud
+      </div>
+    </div>
+  </div>
+  <div class="sn">13</div>
+</div>
+
+<!-- ═══ S14 DEMO EN VIVO ══════════════════════════════════════ -->
+<div class="slide" id="s14">
+  <div class="blob"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;height:100%">
+    <div style="padding:5% 5% 5% 8%;display:flex;flex-direction:column;justify-content:center;gap:24px;position:relative;z-index:1">
+      <div class="ttl" style="font-size:clamp(40px,4.8vw,64px)">Demo en vivo</div>
+      <div style="font-family:'Inter',sans-serif;font-size:clamp(22px,2.2vw,28px);color:var(--g2)">Prueba la aplicación aquí:</div>
+      <!-- QR real -->
+      <div style="width:200px;height:200px;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(243,146,0,.25);flex-shrink:0"><img src="https://res.cloudinary.com/dp9u7piam/image/upload/v1779196332/51c1b0fc-21cc-443f-ab7d-404d96a240da.png" alt="QR Illo Un Campero" style="width:100%;height:100%;object-fit:cover"/></div>
+      <div style="background:var(--o);color:#fff;font-family:'Poppins',sans-serif;font-size:clamp(18px,1.8vw,22px);font-weight:700;padding:12px 22px;border-radius:28px;width:fit-content;box-shadow:0 6px 24px rgba(243,146,0,.4)">
+        illo-uncampero.web.app/restaurantes
+      </div>
+    </div>
+    <!-- Foto portátil / web en uso -->
+    <div style="position:relative;overflow:hidden">
+      <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=900&q=80"
+        alt="Web en portátil" loading="lazy"
+        style="width:100%;height:100%;object-fit:cover;object-position:center">
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,.18)"></div>
+      <div style="position:absolute;bottom:28px;left:28px;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);color:#fff;font-family:'Poppins',sans-serif;font-size:19px;font-weight:700;padding:10px 22px;border-radius:28px">
+        ⚠️ Despierta Render 10 min antes
+      </div>
+    </div>
+  </div>
+  <div class="sn">14</div>
+</div>
+
+<!-- ═══ S15 CONCLUSIONES ══════════════════════════════════════ -->
+<div class="slide" id="s15">
+  <div class="blob"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;height:100%">
+    <div style="padding:5% 5% 5% 8%;display:flex;flex-direction:column;justify-content:center;gap:18px;position:relative;z-index:1">
+      <div class="ttl" style="font-size:clamp(40px,4.5vw,58px)">Conclusiones</div>
+      <div class="cr"><svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:clamp(22px,2.2vw,28px);color:var(--g1)"><strong style="color:var(--k)">Plataforma funcional y completa</strong> — web, API y Android</span></div>
+      <div class="cr"><svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:clamp(22px,2.2vw,28px);color:var(--g1)"><strong style="color:var(--k)">Experiencia multiplataforma</strong> — sin depender de terceros</span></div>
+      <div class="cr"><svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:clamp(22px,2.2vw,28px);color:var(--g1)"><strong style="color:var(--k)">Arquitectura escalable y segura</strong></span></div>
+      <div class="cr"><svg class="ci" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#FFF3E0"/><path d="M7 12l4 4 6-6" stroke="#F39200" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:clamp(22px,2.2vw,28px);color:var(--g1)"><strong style="color:var(--k)">Proyecto real</strong> con potencial de comercialización</span></div>
+      <div class="card" style="padding:22px;border-left:6px solid var(--o);margin-top:8px">
+        <div style="font-family:'Poppins',sans-serif;font-size:17px;font-weight:800;color:var(--o);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">🚀 Trabajo futuro</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <span class="bdg">Web Push</span>
+          <span class="bdg">Impresora tickets</span>
+          <span class="bdg">Fidelización</span>
+          <span class="bdg">App iOS</span>
+        </div>
+      </div>
+    </div>
+    <!-- Foto hamburguesería real -->
+    <div style="position:relative;overflow:hidden">
+      <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=900&q=80"
+        alt="Hamburguesería" loading="lazy"
+        style="width:100%;height:100%;object-fit:cover;object-position:center">
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,.2)"></div>
+    </div>
+  </div>
+  <div class="sn">15</div>
+</div>
+
+<!-- ═══ S16 CIERRE ════════════════════════════════════════════ -->
+<div class="slide" id="s16">
+  <div class="blob-r"></div>
+  <div style="display:grid;grid-template-columns:1fr 420px;height:100%">
+    <div style="display:flex;flex-direction:column;justify-content:center;padding:8% 6% 8% 10%;position:relative;z-index:1">
+      <div style="font-family:'Poppins',sans-serif;font-size:clamp(72px,10vw,128px);font-weight:900;color:var(--k);line-height:.9;margin-bottom:18px">¡Gracias!</div>
+      <div style="font-family:'Poppins',sans-serif;font-size:clamp(24px,2.8vw,36px);font-weight:600;color:var(--o);margin-bottom:52px">¿Alguna pregunta?</div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:center;gap:16px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F39200" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><span style="font-size:clamp(22px,2.2vw,28px);color:var(--g1)">Miguel · Jose Antonio · Bryan</span></div>
+        <div style="display:flex;align-items:center;gap:16px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F39200" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg><span style="font-size:clamp(22px,2.2vw,28px);color:var(--g1)">CPIFP Alan Turing</span></div>
+        <div style="display:flex;align-items:center;gap:16px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F39200" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span style="font-size:clamp(22px,2.2vw,28px);color:var(--g1)">2025 / 2026</span></div>
+      </div>
+    </div>
+    <!-- Columna naranja con logo -->
+    <div style="background:var(--o);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;border-radius:0 0 0 80px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-100px;right:-80px;width:320px;height:320px;border-radius:50%;background:rgba(255,255,255,.12)"></div>
+      <div style="position:absolute;bottom:-80px;left:-60px;width:240px;height:240px;border-radius:50%;background:rgba(0,0,0,.1)"></div>
+      <div class="logo logo-lg" style="background:#fff;border-color:#fff;z-index:1;box-shadow:0 16px 48px rgba(0,0,0,.18);width:160px;height:160px">
+        <span class="il" style="font-size:44px;color:var(--o)">Illo</span>
+        <span class="uc" style="font-size:19px;color:var(--k)">UN CAMPERO</span>
+      </div>
+      <svg width="80" height="80" viewBox="0 0 300 300" fill="none" opacity=".35" style="z-index:1">
+        <circle cx="150" cy="150" r="125" stroke="#fff" stroke-width="3"/>
+        <path d="M72 108 Q150 76 228 108" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+        <rect x="68" y="112" width="164" height="28" rx="14" stroke="#fff" stroke-width="3.5" fill="none"/>
+        <rect x="60" y="148" width="180" height="22" rx="11" stroke="#fff" stroke-width="3.5" fill="none"/>
+        <rect x="68" y="178" width="164" height="22" rx="11" stroke="#fff" stroke-width="3.5" fill="none"/>
+        <path d="M72 207 Q150 236 228 207" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      </svg>
+    </div>
+  </div>
+  <div class="sn">16</div>
+</div>
+
+</div><!-- /deck -->
+
+<nav class="nav">
+  <button onclick="go(c-1)">&#9664;</button>
+  <div class="ndots" id="dots"></div>
+  <span class="ncnt" id="cnt">1 / 16</span>
+  <button onclick="go(c+1)">&#9654;</button>
+</nav>
+
+<script>
+const N=16;let c=1;
+const dotsEl=document.getElementById('dots');
+for(let i=1;i<=N;i++){const d=document.createElement('div');d.className='dot'+(i===1?' on':'');d.onclick=()=>go(i);dotsEl.appendChild(d)}
+function go(n){if(n<1||n>N)return;document.getElementById('s'+c).classList.remove('active');c=n;document.getElementById('s'+c).classList.add('active');document.getElementById('cnt').textContent=c+' / '+N;document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i+1===c))}
+document.addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown',' '].includes(e.key)){e.preventDefault();go(c+1)}if(['ArrowLeft','ArrowUp'].includes(e.key)){e.preventDefault();go(c-1)}if(e.key==='Home')go(1);if(e.key==='End')go(N)});
+let tx=0;
+document.addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
+document.addEventListener('touchend',e=>{const d=tx-e.changedTouches[0].clientX;if(Math.abs(d)>50)d>0?go(c+1):go(c-1)});
+document.querySelector('.deck').addEventListener('click',e=>{if(e.target.closest('.nav'))return;e.clientX>window.innerWidth/2?go(c+1):go(c-1)});
+</script>
+</body>
+</html>
