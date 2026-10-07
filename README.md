@@ -18,3 +18,9 @@ El proyecto nace de un problema real: los restaurantes pequeños gestionan los p
 ## Cómo verla
 
 Es una presentación en HTML de un solo archivo. Descarga el repositorio y abre `index.html` en el navegador.
+
+## Repositorios del proyecto
+
+- [Illo-UnCamperoWeb](https://github.com/MiguelMcx/Illo-UnCamperoWeb): frontend en Angular 20 ([demo en vivo](https://illouncampero.vercel.app))
+- [Illo-UnCamperoBackend](https://github.com/MiguelMcx/Illo-UnCamperoBackend): API REST con Spring Boot 3.4 y Java 21
+- [Illo-UnCamperoMovil](https://github.com/MiguelMcx/Illo-UnCamperoMovil): app Android con Kotlin y Jetpack Compose
